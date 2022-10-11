@@ -1,0 +1,59 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5.1 (swiftlang-1300.0.31.4 clang-1300.0.29.6)
+// swift-module-flags: -target arm64-apple-ios15.0-macabi -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SSNetworking
+import Foundation
+@_exported import SSNetworking
+import Swift
+import _Concurrency
+public enum NetworkError : Swift.Error {
+  case noInternet
+  case noData
+  case parsingError(Swift.Error)
+  case invalidUrl
+  case apiError(Swift.Error)
+}
+public enum HTTPMethod {
+  case get, post, put
+  public static func == (a: SSNetworking.HTTPMethod, b: SSNetworking.HTTPMethod) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct URLComponent {
+  public init(baseUrl: Swift.String, path: Swift.String)
+}
+public protocol APIRequest {
+  var method: SSNetworking.HTTPMethod { get set }
+  var url: SSNetworking.URLComponent { get set }
+  var requestBody: [Swift.String : Any]? { get set }
+  var header: [Swift.String : Any]? { get set }
+  var queryParams: [Swift.String : Any]? { get set }
+  func build() -> Foundation.URLRequest?
+}
+public struct BaseAPIClienServices : SSNetworking.APIServices {
+  public init()
+  public func fetchDataFor<T>(_ request: SSNetworking.APIRequest, completionHandler: @escaping ((Swift.Result<T, SSNetworking.NetworkError>?) -> Swift.Void)) where T : Swift.Decodable, T : Swift.Encodable
+}
+public class BaseRequestBuilder : SSNetworking.APIRequest {
+  public var method: SSNetworking.HTTPMethod
+  public var url: SSNetworking.URLComponent
+  public var requestBody: [Swift.String : Any]?
+  public var header: [Swift.String : Any]?
+  public var queryParams: [Swift.String : Any]?
+  public init(method: SSNetworking.HTTPMethod, url: SSNetworking.URLComponent, requestBody: [Swift.String : Any]? = nil, header: [Swift.String : Any]? = nil, queryParams: [Swift.String : Any]? = nil)
+  public func build() -> Foundation.URLRequest?
+  @objc deinit
+}
+public protocol APIServices {
+  func fetchDataFor<T>(_ request: SSNetworking.APIRequest, completionHandler: @escaping ((Swift.Result<T, SSNetworking.NetworkError>?) -> Swift.Void)) where T : Swift.Decodable, T : Swift.Encodable
+}
+public protocol NetworkManagerServices {
+  func makeRequest(_ request: SSNetworking.APIRequest, completionHandler: @escaping (Foundation.Data?, Foundation.URLResponse?, SSNetworking.NetworkError?) -> Swift.Void)
+}
+@_hasMissingDesignatedInitializers open class BaseNetworkManager : SSNetworking.NetworkManagerServices {
+  open func makeRequest(_ request: SSNetworking.APIRequest, completionHandler: @escaping (Foundation.Data?, Foundation.URLResponse?, SSNetworking.NetworkError?) -> Swift.Void)
+  @objc deinit
+}
+extension SSNetworking.HTTPMethod : Swift.Equatable {}
+extension SSNetworking.HTTPMethod : Swift.Hashable {}

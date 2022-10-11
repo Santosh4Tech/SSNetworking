@@ -1,0 +1,11 @@
+framework module SSNetworking {
+  umbrella header "SSNetworking.h"
+
+  export *
+  module * { export * }
+}
+
+module SSNetworking.Swift {
+    header "SSNetworking-Swift.h"
+    requires objc
+}

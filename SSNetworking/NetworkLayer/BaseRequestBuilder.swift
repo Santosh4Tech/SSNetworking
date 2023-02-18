@@ -19,7 +19,7 @@ public class BaseRequestBuilder: APIRequest {
     
     public var queryParams: [String : Any]?
     
-     init(method: HTTPMethod,
+    public init(method: HTTPMethod,
          url: URLComponent,
          requestBody: [String : Any]? = nil,
          header: [String : Any]? = nil,
